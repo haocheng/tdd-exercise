@@ -4,25 +4,22 @@ import java.time.YearMonth;
 
 public class BudgetModel {
 
-    private YearMonth month;
+    private final YearMonth yearMonth;
 
-    private int amount;
+    private final int amount;
 
-    public BudgetModel(YearMonth month, int amount) {
-        this.month = month;
+    public BudgetModel(YearMonth yearMonth, int amount) {
+        this.yearMonth = yearMonth;
         this.amount = amount;
     }
 
-    public YearMonth getMonth() {
-        return month;
+    public int calculateAmount(BudgetPeriod period) {
+        final int days = period.calculateDays(getBudgetPeriod());
+        final int totalDaysInMonth = yearMonth.getMonth().length(false);
+        return amount * days / totalDaysInMonth;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
-    public int getPartialAmount(int days) {
-        final int totalDaysInMonth = getMonth().getMonth().length(false);
-        return getAmount() * days / totalDaysInMonth;
+    private BudgetPeriod getBudgetPeriod() {
+        return new BudgetPeriod(yearMonth.atDay(1), yearMonth.atEndOfMonth());
     }
 }

@@ -74,6 +74,16 @@ public class BudgetServiceTest {
     }
 
     @Test
+    public void queryAmount_diffYear() {
+        when(budgetDao.query("201812", "201901")).thenReturn(
+                Arrays.asList(new BudgetModel(YearMonth.of(2018, 12), 31),
+                              new BudgetModel(YearMonth.of(2019, 1), 62)));
+
+        final int amount = budgetService.queryAmount(LocalDate.of(2018, 12, 15), LocalDate.of(2019, 1, 5));
+        assertThat(amount, is(27));
+    }
+
+    @Test
     public void queryAmount_diffCrossMonthPartial_Empty() {
         when(budgetDao.query("201802", "201804")).thenReturn(
                 Arrays.asList(new BudgetModel(YearMonth.of(2018, 2), 28),
